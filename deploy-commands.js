@@ -5,7 +5,7 @@ const { clientId, guildId, token } = require('./config.json');
 
 
 const commands = [
-  new SlashCommandBuilder().setName('test').setDescription('Тестовая команда для бота !!!НЕ ТРОГАТЬ!!!'),
+  new SlashCommandBuilder().setName('oleg').setDescription('Стримит ли Олег(Гуль1377)?'),
 //  new SlashCommandBuilder().setName('server').setDescription('Replies with server info!'),
 //  new SlashCommandBuilder().setName('user').setDescription('Replies with user info!'),
 ]
