@@ -77,23 +77,3 @@ robot.on('interactionCreate', async interaction => { // Реагирование
 });
 
 robot.login(serverToken); // Авторизация бота
-
-/* Не реализованно
-robot.on('presenceUpdate', async newPresence  => { 
-  if (!newPresence.client.user == 272319816206123008) return;
-});
-
-async function isStreamerLive(username) {
-    const theUrl = 'https://api.twitch.tv/helix/streams?user_login=kutabaremeow'
-    const headers = {
-        "Client-Id": CLIENT_ID,
-        "Authorization": OAUTH_TOKEN
-    };
-
-    const response = await fetch(theUrl, headers);
-    const data = await response.json();
-
-    return data?.data?.find(s => s.user_login === username.toLocaleLowerCase())
-};
-
-*/
