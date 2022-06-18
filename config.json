@@ -1,8 +1,8 @@
 {
-    "clientId": "986607296320790528",
-    "guildId": "763339130301054976",
-    "token" : "OTg2NjA3Mjk2MzIwNzkwNTI4.GjGXiy.gjzLukW713yabXAP-1USdh06IYzEMaKbAn22a8",
-    "clientId_tw": "i8j267ymgrs9f4hgq7d7kty63z7ovt",
-    "secret_token_tw" : "wiuvoo0pso3v9dr9rjkeiv3znh73w7"
+    "clientId": "your-client-id",
+    "guildId": "your-guild-id",
+    "token" : "your-token",
+    "clientId_tw": "your-client-id-tw",
+    "secret_token_tw" : "secret-token-tw"
 }
 
