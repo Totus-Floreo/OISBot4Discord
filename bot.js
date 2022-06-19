@@ -53,8 +53,9 @@ async function isStreamerLive() { // Создание запроса на пол
 };
 
 setInterval(
-  () => {
-     if (isStreamerLive())
+  async function() {
+    stream_live = await isStreamerLive();
+     if (stream_live)
       {
         if(!stream_status)
         {
@@ -69,7 +70,7 @@ setInterval(
         {
           stream_status = false;
           const channel = bot.channels.cache.get(channel_ID);
-          channel.send('Капибара не стримит \nhttps://www.twitch.tv/kutabaremeow');
+          channel.send('Капибара офнул \nhttps://www.twitch.tv/kutabaremeow');
         }
       }
   },
