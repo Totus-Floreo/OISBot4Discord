@@ -54,8 +54,7 @@ async function isStreamerLive() { // Создание запроса на пол
 
 setInterval(
   async function() {
-    stream_live = await isStreamerLive();
-     if (stream_live)
+     if (await isStreamerLive())
       {
         if(!stream_status)
         {
@@ -83,7 +82,7 @@ bot.on('interactionCreate', async interaction => { // Реагирование �
   const { commandName } = interaction;
 
   if (commandName === 'stream') {
-    if(isStreamerLive())
+    if(await isStreamerLive())
     {
       await interaction.reply(interaction.user.username + ', Капибара сейчас стримит! https://www.twitch.tv/kutabaremeow');
     }
