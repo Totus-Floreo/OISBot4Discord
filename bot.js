@@ -93,4 +93,5 @@ bot.on('interactionCreate', async interaction => { // Реагирование �
   }
 });
 
+
 bot.login(token); // Авторизация бота в системе discord
