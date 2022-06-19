@@ -3,11 +3,8 @@ const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 const { clientId, guildId, token } = require('./config.json');
 
-
 const commands = [
-  new SlashCommandBuilder().setName('oleg').setDescription('Стримит ли Олег(Гуль1377)?'),
-//  new SlashCommandBuilder().setName('server').setDescription('Replies with server info!'),
-//  new SlashCommandBuilder().setName('user').setDescription('Replies with user info!'),
+  new SlashCommandBuilder().setName('stream').setDescription('Стримит ли kutabaremeow?')
 ]
   .map(command => command.toJSON());
 

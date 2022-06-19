@@ -1,18 +1,21 @@
 const { Client, Intents } = require('discord.js'); // Подключаем библиотеку discord.js
-const robot = new Client({ intents: [Intents.FLAGS.GUILDS] }); // Объявляем, что robot - бот
-const fs = require('fs'); // Подключаем родной модуль файловой системы node.js  
+const bot = new Client({ intents: [Intents.FLAGS.GUILDS] }); // Объявляем, что bot это класс Client 
+const fs = require('fs'); // Подключаем родной модуль файловой системы node.js
+const live = 'live'; // Костыль для проверки JSON ответа от twitch о состоянии стримера
+const streamer = "kutabaremeow"; // Объявляем никнейм стримера
+const channel_ID = "763339131002028093"; // Объявляем id канала в discord
 let config = require('./config.json'); // Подключаем файл с параметрами и информацией
-let serverToken = config.token; // «Вытаскиваем» из него токен
-let CLIENT_ID = config.clientId_tw;
-let secret_token_tw = config.secret_token_tw;
+let token = config.token; // Вытаскиваем из него токен бота
+let CLIENT_ID = config.clientId_tw; // Вытаскием номер бота в системе discord
+let secret_token_tw = config.secret_token_tw; // Вытаскием скрытый токен бота в системе discord
+const body = 'client_id='+ CLIENT_ID + '&client_secret='+ secret_token_tw + '&grant_type=client_credentials'; // создаем строку для POST запроса
+stream_status = false; // Костыль для проверки отправлялось ли оповещение о стриме 
 
-robot.once('ready', () => {
+bot.once('ready', () => { // Обычное опевещение о запуске бота
   console.log('Ready!');
 });
 
-const body = 'client_id='+ CLIENT_ID + '&client_secret='+ secret_token_tw + '&grant_type=client_credentials';
-
-async function getOAUTH2() {
+async function getOAUTH2() { // Создание POST запроса на получение OAUTH2 ключа для работы с Twitch API
 
   const response = await fetch('https://id.twitch.tv/oauth2/token', 
   { 
@@ -26,26 +29,20 @@ async function getOAUTH2() {
   return keys;
 }
 
-async function isStreamerLive() {
+async function isStreamerLive() { // Создание запроса на получение состояния стримера через Twitch API
 
   const access = await getOAUTH2();
 
-  const header = {   
-    "Client-Id": CLIENT_ID,
-    "Authorization": 'Bearer ' + access['access_token']    
-  }
-
-  const response = await fetch('https://api.twitch.tv/helix/streams?user_login=kutabaremeow', 
-    {headers: 
-      { 'Client-Id': CLIENT_ID,
+  const response = await fetch('https://api.twitch.tv/helix/streams?user_login=' + streamer,
+    {
+    headers: { 
+      'Client-Id': CLIENT_ID,
       'Authorization': 'Bearer ' + access['access_token']
-    }});
+    }});// Запрос к twitch API о стримере
 
   const data = await response.json();
 
-  const live = 'live';
-
-  if (data?.data?.find(s => s.type === live.toLocaleLowerCase()))
+  if (data?.data?.find(s => s.type === live.toLocaleLowerCase())) // проверка JSON ответа от twitch API на ключевое слово
   {
     return true;
   }
@@ -55,45 +52,45 @@ async function isStreamerLive() {
   }
 };
 
-robot.on('interactionCreate', async interaction => { // Реагирование на команды
+setInterval(
+  () => {
+     if (isStreamerLive())
+      {
+        if(!stream_status)
+        {
+          stream_status = true;
+          const channel = bot.channels.cache.get(channel_ID);
+          channel.send('Капибара стримит \nhttps://www.twitch.tv/kutabaremeow');
+        }
+      }
+      else
+      {
+        if(stream_status)
+        {
+          stream_status = false;
+          const channel = bot.channels.cache.get(channel_ID);
+          channel.send('Капибара не стримит \nhttps://www.twitch.tv/kutabaremeow');
+        }
+      }
+  },
+  6000
+);
+
+bot.on('interactionCreate', async interaction => { // Реагирование на slash commands 
   if (!interaction.isCommand()) return;
 
   const { commandName } = interaction;
 
-  if (commandName === 'oleg') {
+  if (commandName === 'stream') {
     if(isStreamerLive())
     {
-      await interaction.reply(interaction.user.username + ', Олег сейчас стримит!');
+      await interaction.reply(interaction.user.username + ', Капибара сейчас стримит! https://www.twitch.tv/kutabaremeow');
     }
     else
     {
-      await interaction.reply(interaction.user.username + ', Олег сейчас спит!');
+      await interaction.reply(interaction.user.username + ', Капибара сейчас спит!');
     }    
-  } else if (commandName === 'server') {
-    await interaction.reply(`Server name: ${interaction.guild.name}\nTotal members: ${interaction.guild.memberCount}`);
-  } else if (commandName === 'user') {
-    await interaction.reply(`Your tag: ${interaction.user.tag}\nYour id: ${interaction.user.id}`);
   }
 });
 
-robot.login(serverToken); // Авторизация бота
-
-/* Не реализованно
-robot.on('presenceUpdate', async newPresence  => { 
-  if (!newPresence.client.user == 272319816206123008) return;
-});
-
-async function isStreamerLive(username) {
-    const theUrl = 'https://api.twitch.tv/helix/streams?user_login=kutabaremeow'
-    const headers = {
-        "Client-Id": CLIENT_ID,
-        "Authorization": OAUTH_TOKEN
-    };
-
-    const response = await fetch(theUrl, headers);
-    const data = await response.json();
-
-    return data?.data?.find(s => s.user_login === username.toLocaleLowerCase())
-};
-
-*/
+bot.login(token); // Авторизация бота в системе discord
