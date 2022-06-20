@@ -1,12 +1,12 @@
 {
   "name": "dsbot",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "version": "2.0.0",
+  "description": "Discord-bot for work with Twitch API",
+  "main": "bot.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "Kulakov 'Totus Floreo' Timur",
   "license": "ISC",
   "dependencies": {
     "@discordjs/builders": "^0.15.0",
