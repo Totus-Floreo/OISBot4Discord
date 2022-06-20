@@ -4,6 +4,7 @@ const fs = require('fs'); // Подключаем родной модуль фа
 const live = 'live'; // Костыль для проверки JSON ответа от twitch о состоянии стримера
 const streamer = "kutabaremeow"; // Объявляем никнейм стримера
 const channel_ID = "763339131002028093"; // Объявляем id канала в discord
+const channel_ID_log = "988228924834205709"; // Объявляем id лог-канала в discord
 let config = require('./config.json'); // Подключаем файл с параметрами и информацией
 let token = config.token; // Вытаскиваем из него токен бота
 let CLIENT_ID = config.clientId_tw; // Вытаскием номер бота в системе discord
@@ -14,6 +15,7 @@ stream_status = false; // Костыль для проверки отправл�
 bot.once('ready', () => { // Обычное опевещение о запуске бота
   console.log('Ready!');
 });
+
 
 async function getOAUTH2() { // Создание POST запроса на получение OAUTH2 ключа для работы с Twitch API
 
@@ -59,8 +61,10 @@ setInterval(
         if(!stream_status)
         {
           stream_status = true;
-          const channel = bot.channels.cache.get(channel_ID);
-          channel.send('Капибара стримит \nhttps://www.twitch.tv/kutabaremeow');
+          const channelMain = bot.channels.cache.get(channel_ID);
+          channelMain.send('Kapibaremeow стримит \nhttps://www.twitch.tv/kutabaremeow');
+          const channelLog = bot.channels.cache.get(channel_ID_log);
+          channelLog.send('Kapibaremeow стримит. :) Время: ' + new Date(Date.now()).toString());
         }
       }
       else
@@ -68,8 +72,10 @@ setInterval(
         if(stream_status)
         {
           stream_status = false;
-          const channel = bot.channels.cache.get(channel_ID);
-          channel.send('Капибара офнул \nhttps://www.twitch.tv/kutabaremeow');
+          const channelMain = bot.channels.cache.get(channel_ID);
+          channelMain.send('Kapibaremeow офнул. :(');
+          const channelLog = bot.channels.cache.get(channel_ID_log);
+          channelLog.send('Kapibaremeow офнул. :( Время: ' + new Date(Date.now()).toString());
         }
       }
   },
@@ -84,11 +90,18 @@ bot.on('interactionCreate', async interaction => { // Реагирование �
   if (commandName === 'stream') {
     if(await isStreamerLive())
     {
-      await interaction.reply(interaction.user.username + ', Капибара сейчас стримит! https://www.twitch.tv/kutabaremeow');
+      await interaction.reply(interaction.user.username + ', Kapibaremeow сейчас стримит! https://www.twitch.tv/kutabaremeow');
     }
     else
     {
-      await interaction.reply(interaction.user.username + ', Капибара сейчас спит!');
+      if (interaction.channelId === channel_ID_log)
+      {
+        await interaction.reply(interaction.user.username + ', Kapibaremeow сейчас спит! Время: ' + new Date(Date.now()).toString());        
+      }
+      else
+      {
+        await interaction.reply(interaction.user.username + ', Kapibaremeow сейчас спит!');
+      }
     }    
   }
 });
