@@ -1,6 +1,6 @@
 # OISBot4Discord
 Sorry, but 
-I'm newbee in programming, english and JS,C#.
+I'm newbee in programming, english and JS.
 # Library
 Using discordjs.guide and discord.js.org,
 # Authors
