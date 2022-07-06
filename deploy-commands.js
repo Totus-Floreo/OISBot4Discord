@@ -4,7 +4,8 @@ const { Routes } = require('discord-api-types/v9');
 const { clientId, guildId, token } = require('./config.json');
 
 const commands = [
-  new SlashCommandBuilder().setName('stream').setDescription('Стримит ли kutabaremeow?')
+  new SlashCommandBuilder().setName('stream').setDescription('Стримит ли стример?')
+  .addStringOption(option => option.setName('streamer').setDescription('Enter a streamer!'))
 ]
   .map(command => command.toJSON());
 
@@ -13,4 +14,3 @@ const rest = new REST({ version: '9' }).setToken(token);
 rest.put(Routes.applicationGuildCommands(clientId, guildId), { body: commands })
   .then(() => console.log('Successfully registered application commands.'))
   .catch(console.error);
-
